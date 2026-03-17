@@ -1,0 +1,97 @@
+<?xml version="1.0" ?>
+<!--
+  arc_tunnel.sdf
+  Sadece tünel geçiş testi için izole dünya.
+  GPS-SLAM geçiş algoritmasını test etmek için kullanılır.
+
+  TODO (Faz 1): Leo Rover'ın leo_obstacles.sdf tünel geometrisiyle eşleştir
+-->
+<sdf version="1.9">
+  <world name="arc_tunnel">
+
+    <physics name="default_physics" type="ode">
+      <max_step_size>0.001</max_step_size>
+      <real_time_factor>1.0</real_time_factor>
+    </physics>
+
+    <light name="sun" type="directional">
+      <cast_shadows>true</cast_shadows>
+      <pose>0 0 10 0 0 0</pose>
+      <direction>-0.5 0.1 -0.9</direction>
+      <diffuse>0.8 0.8 0.8 1</diffuse>
+    </light>
+
+    <spherical_coordinates>
+      <surface_model>EARTH_WGS84</surface_model>
+      <latitude_deg>39.925018</latitude_deg>
+      <longitude_deg>32.836956</longitude_deg>
+      <elevation>890.0</elevation>
+    </spherical_coordinates>
+
+    <!-- Zemin -->
+    <model name="ground_plane">
+      <static>true</static>
+      <link name="link">
+        <collision name="collision">
+          <geometry>
+            <plane><normal>0 0 1</normal><size>60 20</size></plane>
+          </geometry>
+        </collision>
+        <visual name="visual">
+          <cast_shadows>false</cast_shadows>
+          <geometry>
+            <plane><normal>0 0 1</normal><size>60 20</size></plane>
+          </geometry>
+          <material>
+            <ambient>0.6 0.5 0.4 1</ambient>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- Tünel duvarları (Earendil-Otonomius leo_obstacles.sdf ile aynı boyutlar) -->
+    <model name="tunnel_wall_left">
+      <static>true</static>
+      <pose>25 1.65 0.5 0 0 0</pose>
+      <link name="link">
+        <collision name="c">
+          <geometry><box><size>12 0.3 1.0</size></box></geometry>
+        </collision>
+        <visual name="v">
+          <geometry><box><size>12 0.3 1.0</size></box></geometry>
+          <material><ambient>0.3 0.3 0.3 1</ambient></material>
+        </visual>
+      </link>
+    </model>
+
+    <model name="tunnel_wall_right">
+      <static>true</static>
+      <pose>25 -1.65 0.5 0 0 0</pose>
+      <link name="link">
+        <collision name="c">
+          <geometry><box><size>12 0.3 1.0</size></box></geometry>
+        </collision>
+        <visual name="v">
+          <geometry><box><size>12 0.3 1.0</size></box></geometry>
+          <material><ambient>0.3 0.3 0.3 1</ambient></material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- Tünel çatısı (GPS sinyali kesiyor) -->
+    <model name="tunnel_roof">
+      <static>true</static>
+      <pose>25 0 1.5 0 0 0</pose>
+      <link name="link">
+        <collision name="c">
+          <geometry><box><size>12 3.6 0.3</size></box></geometry>
+        </collision>
+        <visual name="v">
+          <geometry><box><size>12 3.6 0.3</size></box></geometry>
+          <material><ambient>0.2 0.2 0.2 1</ambient></material>
+        </visual>
+      </link>
+    </model>
+
+  </world>
+</sdf>

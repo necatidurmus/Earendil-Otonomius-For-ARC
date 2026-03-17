@@ -1,0 +1,13 @@
+# ExecuteTask.srv
+# Görev başlatma servisi
+# Service: /mission/execute_task
+
+# Request
+string task_name        # "aruco" | "rock" | "peak" | "tunnel"
+string parameters       # JSON parametreler
+bool preempt_current    # Mevcut görevi iptal et
+---
+# Response
+bool accepted
+string message
+uint32 task_id

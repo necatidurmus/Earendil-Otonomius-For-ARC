@@ -1,0 +1,155 @@
+# ═══════════════════════════════════════════════════════════════════
+#  sim_config.yaml  —  Earendil ARC Simülasyon Merkezi Ayar Dosyası
+#
+#  Tüm launch dosyaları, script ve node'lar bu dosyadan okur.
+#  Bölümler:
+#    physics      → Gazebo fizik motoru
+#    gravity      → Yerçekimi vektörü
+#    ground       → Zemin sürtünme katsayıları
+#    robot        → Rover parametreleri (hız, ivme, boyutlar)
+#    timing       → Sistem başlatma gecikmeleri
+#    gps_monitor  → GPS/SLAM mod geçiş eşikleri
+#    tunnel       → GPS spoof tünel bölgesi
+#    door         → GPS spoof kapı bölgesi
+#    gps_datum    → Dünya orijini (NavSat datum)
+#    arc_mission  → ARC yarışması görev konfigürasyonu
+#    safety       → Safety supervisor limitleri
+#    logging      → Rosbag ve log ayarları
+#    rscp         → RSCP iletişim parametreleri
+# ═══════════════════════════════════════════════════════════════════
+
+# ── Gazebo fizik motoru ──────────────────────────────────────────────
+physics:
+  max_step_size:      0.001    # saniye — fizik adım süresi
+  real_time_factor:   1.0      # 1.0=gerçek zamanlı, 2.0=2x hızlı
+
+# ── Yerçekimi ────────────────────────────────────────────────────────
+gravity:
+  x:  0.0
+  y:  0.0
+  z: -9.81
+
+# ── Zemin sürtünme ───────────────────────────────────────────────────
+ground:
+  mu:   0.8
+  mu2:  0.8
+
+# ── Robot parametreleri ──────────────────────────────────────────────
+robot:
+  extra_mass_kg:      0.0      # Ekstra yük (kg)
+  max_speed_ms:       0.4      # m/s — max ileri/geri hız
+  max_rotation:       1.0      # rad/s — max dönüş hızı
+  max_linear_accel:  25.0      # m/s²
+  max_angular_accel: 30.0      # rad/s²
+  radius_m:           0.49     # metre — robot yarıçapı
+  inflation_radius:   0.55     # metre — costmap inflation
+  wheel_mu:           3.0
+  wheel_mu2:          3.0
+  wheel_slip1:        0.001
+  wheel_slip2:        0.0
+  body_mu:            0.3
+  body_mu2:           0.3
+  wheel_separation:   0.716    # metre — sol-sağ tekerlek arası
+  wheel_radius:       0.125    # metre — tekerlek yarıçapı
+
+# ── Sistem başlatma gecikmeleri (saniye) ─────────────────────────────
+timing:
+  gazebo_startup:    25
+  ukf_global_start:   4
+  navsat_start:       8
+  nav2_start:        40
+  nav_stack_wait:    50
+  rviz_start:        42
+
+# ── GPS Monitor eşikleri ─────────────────────────────────────────────
+gps_monitor:
+  gps_to_slam_threshold:  0.3
+  slam_to_gps_threshold:  0.45
+  window_size:            10
+  hysteresis_secs:        3.0
+  gps_timeout_secs:       3.0
+  confirmation_count:     3
+  verbose:               true
+
+# ── Tünel GPS spoof bölgesi ──────────────────────────────────────────
+tunnel:
+  x_min:  19.5
+  x_max:  30.5
+  y_max:   1.35
+
+# ── Kapı GPS spoof bölgesi ───────────────────────────────────────────
+door:
+  x_min:  33.5
+  x_max:  36.5
+  y_max:   1.0
+
+# ── GPS Datum (dünya orijini) ────────────────────────────────────────
+gps_datum:
+  lat:  39.925018
+  lon:  32.836956
+  alt:  890.0
+
+# ── ARC Görev Konfigürasyonu ─────────────────────────────────────────
+arc_mission:
+  # Genel
+  auto_start:        false     # RSCP komutu beklenmeden otomatik başlasın mı
+  max_mission_time:  1200      # saniye — toplam görev zaman aşımı
+
+  # Görev türleri (aktif/pasif)
+  tasks:
+    aruco_search:    true
+    rock_detection:  true
+    peak_search:     true
+    tunnel_traverse: true
+
+  # ArUco task parametreleri
+  aruco:
+    marker_ids:      [0, 1, 2, 3, 4]
+    search_radius_m: 5.0
+    approach_dist_m: 1.0
+
+  # Peak search parametreleri
+  peak:
+    search_radius_m: 15.0
+    elevation_topic: /elevation_map
+
+# ── Safety Supervisor Limitleri ─────────────────────────────────────
+safety:
+  watchdog_timeout_secs:  2.0   # Bu süre komut gelmezse dur
+  max_tilt_deg:          30.0   # Maksimum tilt açısı
+  min_battery_pct:       15.0   # Minimum batarya yüzdesi
+  cliff_distance_m:       0.3   # Uçurum mesafesi limiti
+  emergency_stop_topic:  /e_stop
+
+# ── Logging / Rosbag ─────────────────────────────────────────────────
+logging:
+  auto_record:   true
+  output_dir:    ~/rosbags
+  max_bag_size:  1024          # MB
+  compression:   zstd
+  topics:
+    - /cmd_vel
+    - /odom
+    - /imu/data
+    - /fix
+    - /scan
+    - /mission/state
+    - /rscp/command
+    - /safety/status
+    - /tf
+    - /tf_static
+
+# ── RSCP Parametreleri ───────────────────────────────────────────────
+rscp:
+  # Bağlantı (simülasyonda loopback, gerçek roverde IP ayarla)
+  host:        "127.0.0.1"
+  port:        9090
+  protocol:    "websocket"       # websocket | serial | udp (stub)
+  heartbeat_hz: 1.0
+  command_timeout_secs: 5.0
+
+# ── Test ─────────────────────────────────────────────────────────────
+test:
+  timeout:      600
+  world:        arc_arena        # arc_arena | arc_tunnel | arc_empty
+  launch_rviz:  false

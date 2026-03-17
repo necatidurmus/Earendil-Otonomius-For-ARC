@@ -1,0 +1,18 @@
+# navsat.yaml
+# NavSat Transform parametreleri
+# GPS koordinatlarını odometry frame'e dönüştürür
+# Earendil-Otonomius v0.2 navsat.yaml'dan alındı
+
+navsat_transform:
+  ros__parameters:
+    frequency: 30.0
+    delay: 3.0
+    magnetic_declination_radians: 0.0
+    yaw_offset: 0.0
+    zero_altitude: true
+    broadcast_utm_transform: false
+    publish_filtered_gps: false
+    use_odometry_yaw: false
+    wait_for_datum: false
+    # Datum: Ankara civarı (sim_config.yaml ile eşleşmeli)
+    datum: [39.925018, 32.836956, 890.0]

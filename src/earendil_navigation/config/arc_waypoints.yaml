@@ -1,0 +1,60 @@
+# arc_waypoints.yaml
+# ARC görev waypoint listesi
+# Earendil-Otonomius v0.2 hybrid_waypoints.yaml'dan ARC formatına uyarlandı
+#
+# nav_mode: "gps" veya "slam"
+# task: opsiyonel görev adı (aruco, rock, peak, tunnel)
+
+waypoints:
+  # ── Faz 1: GPS Navigasyon (açık alan) ──────────────────────────
+  - name: start_area
+    x: 0.0
+    y: 0.0
+    yaw: 0.0
+    nav_mode: gps
+
+  - name: south_clear
+    x: 5.0
+    y: 2.0
+    yaw: 0.0
+    nav_mode: gps
+
+  - name: aruco_zone
+    x: 10.0
+    y: 3.0
+    yaw: 0.0
+    nav_mode: gps
+    task: aruco              # ArUco marker arama görevi
+
+  - name: tunnel_entrance
+    x: 19.0
+    y: 0.0
+    yaw: 0.0
+    nav_mode: gps
+
+  # ── Faz 2: SLAM Navigasyon (tünel — GPS-denied) ────────────────
+  - name: tunnel_middle
+    x: 25.0
+    y: 0.0
+    yaw: 0.0
+    nav_mode: slam
+
+  - name: tunnel_exit
+    x: 31.0
+    y: 0.0
+    yaw: 0.0
+    nav_mode: slam
+
+  # ── Faz 3: GPS Navigasyon (geri dönüş) ─────────────────────────
+  - name: peak_zone
+    x: 38.0
+    y: 5.0
+    yaw: 0.0
+    nav_mode: gps
+    task: peak               # Tepe arama görevi
+
+  - name: return_home
+    x: 0.0
+    y: 0.0
+    yaw: 0.0
+    nav_mode: gps

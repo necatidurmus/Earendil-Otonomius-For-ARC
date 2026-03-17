@@ -1,0 +1,123 @@
+name: CI
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+
+jobs:
+  lint:
+    name: Lint (ament_flake8 + ament_pep257)
+    runs-on: ubuntu-22.04
+    container:
+      image: osrf/ros:humble-desktop
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install lint tools
+        run: |
+          apt-get update -q
+          apt-get install -yq python3-ament-flake8 python3-ament-pep257 \
+            python3-ament-copyright ros-humble-ament-lint-auto
+
+      - name: Run flake8
+        run: |
+          source /opt/ros/humble/setup.bash
+          find src -name "*.py" -not -path "*/test/*" | xargs flake8 \
+            --max-line-length=99 --ignore=E501,W503 || true
+
+      - name: Run pep257
+        run: |
+          find src -name "*.py" -not -path "*/test/*" | xargs pep257 || true
+
+  build:
+    name: Build (colcon)
+    runs-on: ubuntu-22.04
+    container:
+      image: osrf/ros:humble-desktop
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: |
+          apt-get update -q
+          apt-get install -yq \
+            python3-colcon-common-extensions \
+            python3-rosdep \
+            ros-humble-navigation2 \
+            ros-humble-nav2-bringup \
+            ros-humble-slam-toolbox \
+            ros-humble-robot-localization \
+            ros-humble-cv-bridge \
+            ros-humble-image-transport \
+            python3-opencv
+
+      - name: Build workspace
+        run: |
+          source /opt/ros/humble/setup.bash
+          colcon build \
+            --packages-select \
+              earendil_msgs \
+              earendil_bringup \
+              earendil_description \
+              earendil_localization \
+              earendil_navigation \
+              earendil_mission \
+              earendil_perception \
+              earendil_safety \
+              earendil_teleop \
+              earendil_rscp \
+              earendil_logging \
+              earendil_matlab_adapter \
+            --cmake-args -DCMAKE_BUILD_TYPE=Release \
+            2>&1
+
+      - name: Upload build log on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-log
+          path: log/
+
+  unit-test:
+    name: Unit Tests (pytest)
+    runs-on: ubuntu-22.04
+    needs: build
+    container:
+      image: osrf/ros:humble-desktop
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: |
+          apt-get update -q
+          apt-get install -yq \
+            python3-colcon-common-extensions \
+            python3-pytest \
+            python3-rosdep
+
+      - name: Build and test
+        run: |
+          source /opt/ros/humble/setup.bash
+          colcon build \
+            --packages-select \
+              earendil_msgs \
+              earendil_mission \
+              earendil_localization \
+              earendil_safety \
+              earendil_rscp
+          colcon test \
+            --packages-select \
+              earendil_mission \
+              earendil_localization \
+              earendil_safety \
+              earendil_rscp \
+            --return-code-on-test-failure
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results
+          path: log/latest_test/

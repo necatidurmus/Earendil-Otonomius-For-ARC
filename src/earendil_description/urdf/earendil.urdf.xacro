@@ -1,0 +1,83 @@
+<?xml version="1.0"?>
+<!--
+  earendil.urdf.xacro
+  Earendil ARC Rover robot tanımı — STUB
+
+  TODO (Faz 1): Leo Rover URDF'ini baz alarak gerçek rover modeli oluşturulacak
+  Şu an minimal placeholder — Gazebo'da görünür basit kutu modeli
+
+  Sensörler:
+    - LiDAR (RPLiDAR A1/A3)
+    - IMU (BNO055)
+    - GPS (U-blox)
+    - Kamera (USB / MIPI)
+-->
+<robot name="earendil" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <!-- Robot parametreleri -->
+  <xacro:property name="base_width"  value="0.4" />
+  <xacro:property name="base_length" value="0.5" />
+  <xacro:property name="base_height" value="0.15" />
+  <xacro:property name="wheel_radius" value="0.125" />
+  <xacro:property name="wheel_width"  value="0.08" />
+  <xacro:property name="wheel_sep"    value="0.358" />
+  <xacro:property name="wheel_base"   value="0.3" />
+
+  <!-- Base link -->
+  <link name="base_link">
+    <visual>
+      <geometry>
+        <box size="${base_length} ${base_width} ${base_height}" />
+      </geometry>
+      <material name="grey">
+        <color rgba="0.5 0.5 0.5 1.0" />
+      </material>
+    </visual>
+    <collision>
+      <geometry>
+        <box size="${base_length} ${base_width} ${base_height}" />
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="5.0" />
+      <inertia ixx="0.1" ixy="0.0" ixz="0.0"
+               iyy="0.1" iyz="0.0" izz="0.1" />
+    </inertial>
+  </link>
+
+  <!-- IMU sensor frame -->
+  <link name="imu_link" />
+  <joint name="imu_joint" type="fixed">
+    <parent link="base_link" />
+    <child link="imu_link" />
+    <origin xyz="0.0 0.0 0.05" rpy="0 0 0" />
+  </joint>
+
+  <!-- LiDAR frame -->
+  <link name="lidar_link" />
+  <joint name="lidar_joint" type="fixed">
+    <parent link="base_link" />
+    <child link="lidar_link" />
+    <origin xyz="0.2 0.0 0.1" rpy="0 0 0" />
+  </joint>
+
+  <!-- GPS frame -->
+  <link name="gps_link" />
+  <joint name="gps_joint" type="fixed">
+    <parent link="base_link" />
+    <child link="gps_link" />
+    <origin xyz="0.0 0.0 0.15" rpy="0 0 0" />
+  </joint>
+
+  <!-- Camera frame -->
+  <link name="camera_link" />
+  <joint name="camera_joint" type="fixed">
+    <parent link="base_link" />
+    <child link="camera_link" />
+    <origin xyz="0.25 0.0 0.05" rpy="0 0 0" />
+  </joint>
+
+  <!-- TODO (Faz 1): Tekerlek ve motor tanımları eklenecek -->
+  <!-- TODO (Faz 1): Gazebo plugin tanımları eklenecek (DiffDrive, IMU, GPS, LiDAR, Camera) -->
+
+</robot>

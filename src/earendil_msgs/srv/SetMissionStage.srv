@@ -1,0 +1,12 @@
+# SetMissionStage.srv
+# Görev aşamasını değiştirme servisi
+# Service: /mission/set_stage
+
+# Request
+string stage_name       # "gps_nav" | "slam_nav" | "task_exec" | "returning"
+string parameters       # JSON ek parametreler
+---
+# Response
+bool success
+string message
+string previous_stage

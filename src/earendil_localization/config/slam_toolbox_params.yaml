@@ -1,0 +1,46 @@
+# slam_toolbox_params.yaml
+# SLAM Toolbox async mode parametreleri
+# GPS-denied ortam (tünel) için kullanılır
+# Earendil-Otonomius v0.2 slam_toolbox_params.yaml'dan alındı
+
+async_slam_toolbox_node:
+  ros__parameters:
+    # Solver
+    solver_plugin: solver_plugins::CeresSolver
+    ceres_linear_solver: SPARSE_NORMAL_CHOLESKY
+    ceres_preconditioner: SCHUR_JACOBI
+    ceres_trust_strategy: LEVENBERG_MARQUARDT
+    ceres_dogleg_type: TRADITIONAL_DOGLEG
+    ceres_loss_function: None
+
+    # ROS parametreleri
+    odom_frame: odom
+    map_frame: map_slam
+    base_frame: base_link
+    scan_topic: /scan
+    use_map_saver: false
+    mode: mapping
+
+    # Harita parametreleri
+    map_file_name: ""
+    map_start_at_dock: true
+
+    # Throttle
+    minimum_travel_distance: 0.3
+    minimum_travel_heading: 0.4
+    map_update_interval: 2.0
+
+    resolution: 0.05
+    max_laser_range: 8.0
+
+    # Debug
+    debug_logging: false
+    throttle_scans: 1
+    transform_publish_period: 0.02
+    default_value: 0
+    use_scan_matching: true
+    use_scan_barycenter: true
+
+    # Önceden yüklenmiş harita (opsiyonel — replay veya pre-built)
+    # map_file_name: /home/ros/maps/arc_map
+    # mode: localization

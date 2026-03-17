@@ -1,0 +1,58 @@
+# ROS 2 build artifacts
+build/
+install/
+log/
+*.log
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+dist/
+.eggs/
+*.egg
+.pytest_cache/
+.mypy_cache/
+
+# Colcon
+.colcon_testresult
+colcon_cd.sh
+
+# Rosbag recordings (don't commit large bags)
+*.bag
+*.db3
+*.mcap
+rosbag2_*/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# CMake
+CMakeCache.txt
+CMakeFiles/
+Makefile
+cmake_install.cmake
+
+# Gazebo
+*.dae.bak
+GazeboRosPackages/
+
+# Docker
+.docker/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# MATLAB
+*.m~
+*.asv
+
+# Temp/scratch
+scratch/
+tmp/
+*.tmp

@@ -1,0 +1,23 @@
+# NavigateToWaypoint.action
+# Waypoint navigasyon action'ı
+# Action: /navigation/navigate_to_waypoint
+
+# Goal
+geometry_msgs/PoseStamped target_pose
+string waypoint_id
+float32 goal_tolerance_m    # Hedefe ulaşma mesafesi toleransı
+bool use_gps_nav            # true: GPS nav, false: SLAM nav
+
+---
+# Result
+bool success
+string message
+float32 elapsed_secs
+geometry_msgs/PoseStamped final_pose
+
+---
+# Feedback
+geometry_msgs/PoseStamped current_pose
+float32 distance_remaining_m
+float32 estimated_time_remaining_secs
+string nav_mode             # "gps" | "slam"
