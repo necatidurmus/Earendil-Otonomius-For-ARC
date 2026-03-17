@@ -94,6 +94,8 @@ arc_mission:
   # Genel
   auto_start:        false     # RSCP komutu beklenmeden otomatik başlasın mı
   max_mission_time:  1200      # saniye — toplam görev zaman aşımı
+                               # Aşılırsa: mission_manager EMERGENCY durumuna geçer,
+                               # e_stop yayınlanır ve rover güvenli durumda bekler.
 
   # Görev türleri (aktif/pasif)
   tasks:

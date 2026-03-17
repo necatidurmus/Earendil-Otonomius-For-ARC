@@ -6,10 +6,15 @@ on:
   pull_request:
     branches: [main, develop]
 
+permissions:
+  contents: read
+
 jobs:
   lint:
     name: Lint (ament_flake8 + ament_pep257)
     runs-on: ubuntu-22.04
+    permissions:
+      contents: read
     container:
       image: osrf/ros:humble-desktop
     steps:
@@ -34,6 +39,8 @@ jobs:
   build:
     name: Build (colcon)
     runs-on: ubuntu-22.04
+    permissions:
+      contents: read
     container:
       image: osrf/ros:humble-desktop
     steps:
@@ -84,6 +91,8 @@ jobs:
     name: Unit Tests (pytest)
     runs-on: ubuntu-22.04
     needs: build
+    permissions:
+      contents: read
     container:
       image: osrf/ros:humble-desktop
     steps:

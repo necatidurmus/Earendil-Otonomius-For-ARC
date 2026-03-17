@@ -60,14 +60,23 @@ class GpsQualityMonitor:
         """
         Yeni GPS ölçümü ile kaliteyi günceller.
 
+        Akış:
+          1. GPS zaman damgasını kaydet
+          2. Kalite skorunu hesapla ve pencereye ekle
+          3. Mod geçişi gerekip gerekmediğini kontrol et
+
         :param status: NavSatStatus.status değeri (NO_FIX=−1, FIX=0, SBAS=1, GBAS=2)
         :param hdop: Yatay dilüsyon (küçük = iyi)
         :return: Yeni mod (geçiş olduysa) veya None
         """
         self._last_gps_time = time.monotonic()
+        self._update_quality_window(status, hdop)
+        return self._check_transition()
+
+    def _update_quality_window(self, status: int, hdop: float) -> None:
+        """Kalite skorunu hesaplar ve kayan pencereye ekler."""
         quality = self._compute_quality(status, hdop)
         self._quality_window.append(quality)
-        return self._check_transition()
 
     def update_timeout_check(self) -> Optional[str]:
         """
@@ -78,7 +87,8 @@ class GpsQualityMonitor:
             return None
         elapsed = time.monotonic() - self._last_gps_time
         if elapsed > self._gps_timeout_secs:
-            self._quality_window.append(0.0)
+            # Timeout: NO_FIX gibi davran, kalite = 0.0
+            self._update_quality_window(status=-1, hdop=10.0)
             return self._check_transition()
         return None
 
