@@ -1,0 +1,11 @@
+# NavigateWaypoint — navigate to a single waypoint
+
+earendil_interfaces/Waypoint target
+float64 timeout_sec        # 0 = no timeout
+---
+earendil_interfaces/Waypoint result_waypoint
+---
+# Feedback
+float32 distance_remaining
+float32 elapsed_time_sec
+uint32 current_waypoint_index

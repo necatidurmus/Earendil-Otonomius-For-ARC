@@ -1,0 +1,28 @@
+[Unit]
+Description=Earendil Vehicle ROS 2 System
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+# IMPORTANT: Set User/Group/WorkingDirectory to match your RPi user.
+# If your user is not 'ubuntu', edit these three lines before installing.
+User=ubuntu
+Group=ubuntu
+WorkingDirectory=/home/ubuntu/earendil_rpi5_vehicle
+Environment="ROS_DOMAIN_ID=0"
+Environment="RMW_IMPLEMENTATION=rmw_fastrtps_cpp"
+EnvironmentFile=-/home/ubuntu/earendil_rpi5_vehicle/.env
+ExecStart=/bin/bash -c 'source /opt/ros/jazzy/setup.bash && source /home/ubuntu/earendil_rpi5_vehicle/install/setup.bash && ros2 launch earendil_bringup vehicle.launch.py'
+Restart=on-failure
+RestartSec=5
+TimeoutStartSec=60
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=earendil-vehicle
+
+# Safety: e-stop then disarm on shutdown
+ExecStop=/bin/bash -c 'source /opt/ros/jazzy/setup.bash && source /home/ubuntu/earendil_rpi5_vehicle/install/setup.bash 2>/dev/null; ros2 service call /emergency_stop earendil_interfaces/srv/EmergencyStop "{engage: true}" 2>/dev/null || true; ros2 topic pub --once /rscp/command earendil_interfaces/msg/RscpCommand "{command_type: 2}" 2>/dev/null || true'
+
+[Install]
+WantedBy=multi-user.target

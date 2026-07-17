@@ -1,0 +1,41 @@
+# Mission Manager configuration for ARC 2026
+# Per ROADMAP.md §7 stage state machines
+
+mission_manager:
+  ros__parameters:
+    # Arrival tolerances per RTK quality
+    arrival_tolerance_m: 1.0
+    rtk_fixed_tolerance_m: 0.3
+    rtk_float_tolerance_m: 0.4
+    rtk_no_fix_action: stop    # stop or degrade
+
+    # Search pattern
+    search_pattern: spiral     # spiral or grid
+    search_speed_mps: 0.3
+
+    # Timeouts
+    exploration_timeout_s: 300
+    waypoint_timeout_s: 120
+
+    # Retry
+    max_retry_count: 3
+
+    # Frame
+    map_frame: map
+
+    # Logging
+    log_mission: true
+    log_path: /var/log/earendil/missions/
+
+    # ── Lifecycle (M7 — dahili, RSCP'den bağımsız) ──────────────
+    # Stuck algılama (GPS/odom ilerleme eşiği)
+    stuck_window_s: 10.0
+    stuck_min_progress_m: 0.2
+    stuck_check_source: odom    # odom (stm/wheel_odom) veya gps
+
+    # Mission report (JSON, post-mission)
+    report_sample_hz: 2.0       # path örnekleme frekansı (dosya şişmesin)
+
+    # GPS↔SLAM mode geçişi (arayüz + trigger; SLAM kaynağı M8)
+    rtk_degrade_timeout_s: 5.0  # RTK NO_FIX/SPS bu süreden uzun → SLAM'a geç
+    rtk_recover_timeout_s: 5.0  # RTK düzel + lock bu süreden uzun → GPS'e dön

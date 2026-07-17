@@ -1,0 +1,24 @@
+# Safety system configuration for Earendil RPi5 Vehicle
+# Topics per CLAUDE.md §7, timeout per §8
+
+safety_mux:
+  ros__parameters:
+    input_topics: ["/cmd_vel_nav", "/cmd_vel_manual"]
+    output_topic: "/cmd_vel_safe"
+    estop_topic: "/e_stop"
+    deadman_topic: "/deadman"
+    arm_gate_topic: "/rscp/command"
+    stm_status_topic: "/stm/status"
+    watchdog_timeout_ms: 400
+    command_timeout_ms: 300
+    deadman_timeout_ms: 1000
+    max_linear_speed: 0.5
+    max_angular_speed: 1.0
+    estop_latching: true
+    arm_required: true
+
+watchdog_node:
+  ros__parameters:
+    stm_timeout_ms: 400
+    rscp_timeout_ms: 2000
+    check_period_ms: 100

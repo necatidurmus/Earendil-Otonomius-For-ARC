@@ -1,0 +1,12 @@
+# RSCP Bridge configuration
+# Serial connection to ARC Competition Module
+
+rscp_bridge:
+  ros__parameters:
+    serial_port: /dev/earendil_rscp
+    serial_baud: 115200
+    serial_timeout_s: 1.0
+    rover_status_period_s: 1.0       # ≤1 Hz per RSCP spec
+    frame_buffer_timeout_s: 2.0      # partial frame timeout
+    reconnect_delay_s: 1.0
+    log_level: INFO

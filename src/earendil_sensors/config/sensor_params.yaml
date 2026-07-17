@@ -1,0 +1,62 @@
+# Sensor adapter configuration
+# Topics per CLAUDE.md S7, ROADMAP.md S5 (M5)
+
+# RTK GPS - LC25H EA module (base + rover)
+# Baud 115200 for RTK output rate. NMEA GGA sentences.
+gps_adapter:
+  ros__parameters:
+    serial_port: /dev/earendil_rtk
+    serial_baud: 115200
+    use_hardware: false
+    publish_rate_hz: 5.0
+    fix_topic: /gps/fix
+    rtk_status_topic: /rtk/status
+    frame_id: gps_link
+
+# IMU - handled by stm_bridge (/stm/imu/data, /stm/magnetic_field)
+# imu_adapter is placeholder; stm_bridge publishes directly from H723 MPU9250
+imu_adapter:
+  ros__parameters:
+    use_hardware: false
+    publish_rate_hz: 50.0
+    imu_topic: /stm/imu/data
+    frame_id: imu_link
+    i2c_bus: 1
+    i2c_address: 0x68
+
+# LiDAR - DFRobot D800 (LDRobot LD06 protocol)
+# Serial binary protocol, 230400 baud, 360 deg scan, 5-12 Hz
+lidar_adapter:
+  ros__parameters:
+    serial_port: /dev/earendil_lidar
+    serial_baud: 230400
+    use_hardware: false
+    scan_topic: /scan
+    frame_id: lidar_link
+    publish_rate_hz: 10.0
+    min_range_m: 0.02
+    max_range_m: 12.0
+    min_confidence: 10
+
+# Encoder - handled by stm_bridge (/stm/wheel_odom)
+# encoder_adapter is placeholder; stm_bridge computes odom from F411 RPM telemetry
+encoder_adapter:
+  ros__parameters:
+    use_hardware: false
+    publish_rate_hz: 50.0
+    wheel_base: 0.825
+    wheel_radius: 0.125
+    wheel_circumference: 0.785
+    hall_pulses_per_motor_rev: 90
+    gear_ratio: 1.0
+    odom_topic: /stm/wheel_odom
+    frame_id: odom
+    child_frame_id: base_link
+
+# Diagnostics - system health monitoring
+diagnostics:
+  ros__parameters:
+    publish_rate_hz: 1.0
+    stm_timeout_ms: 500
+    gps_timeout_ms: 2000
+    lidar_timeout_ms: 1000

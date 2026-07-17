@@ -1,0 +1,9 @@
+# SetMission service — load a waypoint mission
+
+earendil_interfaces/Waypoint[] waypoints
+string mission_name
+bool auto_start     # start immediately after loading
+---
+bool success
+string message
+uint32 mission_id

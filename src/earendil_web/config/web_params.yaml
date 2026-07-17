@@ -1,0 +1,19 @@
+# Web Dashboard Configuration
+# ARC 2026 rover control panel parameters
+
+web_server:
+  ros__parameters:
+    # Network binding — 0.0.0.0 for LAN access
+    host: "0.0.0.0"
+    port: 8080
+
+    # Deadman switch — heartbeat must arrive within this interval
+    deadman_interval_ms: 500
+
+    # Speed limits — must match safety_mux limits
+    # (web enforces its own limits before sending to safety_mux)
+    max_linear_speed: 0.3
+    max_angular_speed: 0.5
+
+    # Log retention
+    log_max_entries: 50

@@ -1,0 +1,7 @@
+# EmergencyStop service
+# Call with engage=true to trigger e-stop, engage=false to release
+
+bool engage
+---
+bool success
+string message

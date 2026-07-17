@@ -1,0 +1,19 @@
+# STM Bridge configuration
+# Vehicle physical spec: see URDF (wheel_base=0.825, track_width=1.10, wheel_radius=0.125)
+
+stm_bridge:
+  ros__parameters:
+    cmd_vel_topic: /cmd_vel_safe
+    serial_port: /dev/earendil_h7
+    serial_baud: 115200
+    ack_timeout_ms: 500
+    max_retries: 3
+    link_loss_timeout_ms: 3000
+    use_hardware: false
+    wheel_base: 0.825
+    track_width: 1.10
+    wheel_radius: 0.125
+    wheel_circumference: 0.785
+    hall_pulses_per_motor_rev: 90
+    gear_ratio: 1.0
+    max_motor_rpm: 300

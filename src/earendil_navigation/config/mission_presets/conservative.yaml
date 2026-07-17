@@ -1,0 +1,13 @@
+# Preset: conservative — güvenli, yavaş, yüksek tolerans
+# CMD_LOAD_PRESET payload=conservative ile yüklenir
+mission_manager:
+  ros__parameters:
+    arrival_tolerance_m: 1.5
+    rtk_fixed_tolerance_m: 0.4
+    rtk_float_tolerance_m: 0.5
+    search_speed_mps: 0.2
+    waypoint_timeout_s: 180
+    exploration_timeout_s: 420
+    max_retry_count: 5
+    stuck_window_s: 12.0
+    stuck_min_progress_m: 0.15

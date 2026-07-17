@@ -1,0 +1,27 @@
+# Earendil Vehicle - udev rules
+# Symlink names match config files in earendil_*_bridge/config/*.yaml
+# Verify vendor+product IDs with: lsusb -v -d <vendor>:<product>
+# Identify serial attributes: udevadm info -a -n /dev/ttyUSB0
+
+# RTK GPS - LC25H EA (CP2102 USB-serial)
+# Differentiate from LiDAR by serial number attribute
+SUBSYSTEM=="tty", ATTRS{idVendor}=="10c4", ATTRS{idProduct}=="ea60", ATTRS{serial}=="*GPS*", SYMLINK+="earendil_rtk", GROUP="dialout", MODE="0666"
+
+# DFRobot D800 LiDAR (LDRobot LD06, CP2102 USB-serial)
+# Differentiate from GPS by serial number attribute
+# NOTE: If both GPS and LiDAR use same CP2102, use serial attribute to distinguish.
+# Run: udevadm info -a -n /dev/ttyUSBX on each device to find unique ATTRS{serial}
+SUBSYSTEM=="tty", ATTRS{idVendor}=="10c4", ATTRS{idProduct}=="ea60", ATTRS{serial}=="*LIDAR*", SYMLINK+="earendil_lidar", GROUP="dialout", MODE="0666"
+
+# Fallback: if only one CP2102 device is connected, use generic match
+# Uncomment ONE of these if serial-based differentiation is not possible:
+# SUBSYSTEM=="tty", ATTRS{idVendor}=="10c4", ATTRS{idProduct}=="ea60", SYMLINK+="earendil_rtk", GROUP="dialout", MODE="0666"
+
+# STM32H723 main brain (motor + IMU + mag)
+SUBSYSTEM=="tty", ATTRS{idVendor}=="2341", SYMLINK+="earendil_h7", GROUP="dialout", MODE="0666"
+
+# RSCP competition module (serial-to-CM)
+SUBSYSTEM=="tty", ATTRS{idVendor}=="1a86", SYMLINK+="earendil_rscp", GROUP="dialout", MODE="0666"
+
+# GPIO access (e-stop, etc.)
+SUBSYSTEM=="gpio", GROUP="gpio", MODE="0660"

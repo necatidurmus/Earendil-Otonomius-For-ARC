@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="utf-8"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro"
+       name="earendil_vehicle">
+
+  <!-- Earendil Vehicle — ARC 2026 Rover Description
+       Skid-steer, BLDC hub motors, RPi5 + H723 + F411x4.
+       TF tree: map → odom → base_link → sensors + wheels
+  -->
+
+  <xacro:arg name="wheel_base" default="0.825"/>
+  <xacro:arg name="track_width" default="1.10"/>
+  <xacro:arg name="wheel_radius" default="0.125"/>
+
+  <xacro:property name="wb" value="$(arg wheel_base)"/>
+  <xacro:property name="tw" value="$(arg track_width)"/>
+  <xacro:property name="wr" value="$(arg wheel_radius)"/>
+  <xacro:property name="half_wb" value="${wb / 2.0}"/>
+  <xacro:property name="half_tw" value="${tw / 2.0}"/>
+
+  <!-- ====== Base Link ====== -->
+  <link name="base_footprint"/>
+
+  <link name="base_link">
+    <inertial>
+      <mass value="30.0"/>
+      <origin xyz="0 0 0"/>
+      <inertia
+        ixx="1.20" ixy="0.0" ixz="0.0"
+        iyy="1.50" iyz="0.0"
+        izz="2.00"/>
+    </inertial>
+    <visual>
+      <geometry>
+        <box size="0.70 0.60 0.20"/>
+      </geometry>
+      <material name="dark_grey">
+        <color rgba="0.2 0.2 0.2 1.0"/>
+      </material>
+    </visual>
+    <collision>
+      <geometry>
+        <box size="0.70 0.60 0.20"/>
+      </geometry>
+    </collision>
+  </link>
+
+  <joint name="base_joint" type="fixed">
+    <origin xyz="0 0 0.15"/>
+    <parent link="base_footprint"/>
+    <child link="base_link"/>
+  </joint>
+
+  <!-- ====== Wheels (simplified) ====== -->
+  <xacro:macro name="wheel_link" params="name x y">
+    <link name="wheel_${name}_link">
+      <inertial>
+        <mass value="2.55"/>
+        <origin xyz="0 0 0"/>
+        <inertia
+          ixx="0.014" ixy="0.0" ixz="0.0"
+          iyy="0.017" iyz="0.0"
+          izz="0.014"/>
+      </inertial>
+      <visual>
+        <origin xyz="0 0 0" rpy="${pi/2} 0 0"/>
+        <geometry>
+          <cylinder radius="${wr}" length="0.15"/>
+        </geometry>
+        <material name="black">
+          <color rgba="0.1 0.1 0.1 1.0"/>
+        </material>
+      </visual>
+      <collision>
+        <origin xyz="0 0 0" rpy="${pi/2} 0 0"/>
+        <geometry>
+          <cylinder radius="${wr}" length="0.15"/>
+        </geometry>
+      </collision>
+    </link>
+
+    <joint name="wheel_${name}_joint" type="continuous">
+      <origin xyz="${x} ${y} 0"/>
+      <parent link="base_link"/>
+      <child link="wheel_${name}_link"/>
+      <axis xyz="0 1 0"/>
+    </joint>
+  </xacro:macro>
+
+  <xacro:wheel_link name="FL" x="${half_wb}" y="${half_tw}"/>
+  <xacro:wheel_link name="RL" x="${-half_wb}" y="${half_tw}"/>
+  <xacro:wheel_link name="FR" x="${half_wb}" y="${-half_tw}"/>
+  <xacro:wheel_link name="RR" x="${-half_wb}" y="${-half_tw}"/>
+
+  <!-- ====== LiDAR ====== -->
+  <link name="lidar_link">
+    <inertial>
+      <mass value="0.17"/>
+      <origin xyz="0 0 0"/>
+      <inertia ixx="0.001" ixy="0" ixz="0"
+               iyy="0.001" iyz="0"
+               izz="0.001"/>
+    </inertial>
+    <visual>
+      <geometry>
+        <cylinder radius="0.035" length="0.04"/>
+      </geometry>
+      <material name="dark_grey">
+        <color rgba="0.2 0.2 0.2 1.0"/>
+      </material>
+    </visual>
+  </link>
+
+  <joint name="lidar_joint" type="fixed">
+    <origin xyz="0.0 0.0 0.30"/>
+    <parent link="base_link"/>
+    <child link="lidar_link"/>
+  </joint>
+
+  <!-- ====== IMU ====== -->
+  <link name="imu_link"/>
+
+  <joint name="imu_joint" type="fixed">
+    <origin xyz="0.0 0.0 0.0"/>
+    <parent link="base_link"/>
+    <child link="imu_link"/>
+  </joint>
+
+  <!-- ====== GPS ====== -->
+  <link name="gps_link"/>
+
+  <joint name="gps_joint" type="fixed">
+    <origin xyz="0.0 0.0 0.15"/>
+    <parent link="base_link"/>
+    <child link="gps_link"/>
+  </joint>
+
+  <!-- ====== Camera (optional) ====== -->
+  <link name="camera_frame"/>
+  <link name="camera_optical_frame"/>
+
+  <joint name="camera_joint" type="fixed">
+    <origin xyz="0.30 0.0 0.10"/>
+    <parent link="base_link"/>
+    <child link="camera_frame"/>
+  </joint>
+
+  <joint name="camera_optical_joint" type="fixed">
+    <origin xyz="0 0 0" rpy="${-pi/2} 0 ${-pi/2}"/>
+    <parent link="camera_frame"/>
+    <child link="camera_optical_frame"/>
+  </joint>
+
+</robot>

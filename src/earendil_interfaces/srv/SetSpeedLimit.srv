@@ -1,0 +1,7 @@
+# SetSpeedLimit service
+
+float32 max_linear    # m/s
+float32 max_angular   # rad/s
+---
+bool success
+string message

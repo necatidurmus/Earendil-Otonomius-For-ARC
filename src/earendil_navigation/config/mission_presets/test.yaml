@@ -1,0 +1,13 @@
+# Preset: test — bench/sim test için kısa timeout, düşük tolerans
+# CMD_LOAD_PRESET payload=test ile yüklenir
+mission_manager:
+  ros__parameters:
+    arrival_tolerance_m: 1.0
+    rtk_fixed_tolerance_m: 0.3
+    rtk_float_tolerance_m: 0.4
+    search_speed_mps: 0.3
+    waypoint_timeout_s: 30
+    exploration_timeout_s: 60
+    max_retry_count: 1
+    stuck_window_s: 5.0
+    stuck_min_progress_m: 0.2

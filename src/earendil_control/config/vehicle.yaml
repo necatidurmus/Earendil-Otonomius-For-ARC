@@ -1,0 +1,27 @@
+# Vehicle physical specification — Earendil Rover
+# Shared across earendil_control, earendil_sensors, earendil_navigation
+# TBD values are to be calibrated in M11 field tests
+
+vehicle:
+  # Geometry
+  wheel_base_m: 0.825              # distance between front and rear axle centers
+  track_width_m: 1.10              # TBD — center-to-center or outer-to-outer?
+  wheel_radius_m: 0.125
+  wheel_circumference_m: 0.785     # ~2π × 0.125
+
+  # Calibration (TBD — M11 field calibration)
+  effective_track_width_m: 0.0     # TBD — derived from 360° tank turn test
+  angular_correction_gain: 0.0     # TBD — derived from 90° tank turn test
+  left_motor_gain: 1.0             # TBD — derived from straight-line drift test
+  right_motor_gain: 1.0            # TBD — derived from straight-line drift test
+
+  # Motor / encoder
+  hall_pulses_per_motor_rev: 90    # POLE_PAIRS=15 × 6 edges
+  gear_ratio: 1.0                  # TBD — hub motor assumption, verify
+  motor_pole_pairs: 15
+  max_motor_rpm: 0                 # TBD — M11 field test
+
+  # Frames (REP-105)
+  base_frame: base_link
+  odom_frame: odom
+  map_frame: map

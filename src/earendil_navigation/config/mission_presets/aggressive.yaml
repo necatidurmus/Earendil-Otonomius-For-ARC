@@ -1,0 +1,13 @@
+# Preset: aggressive — hızlı, düşük tolerans (saha deneyimli)
+# CMD_LOAD_PRESET payload=aggressive ile yüklenir
+mission_manager:
+  ros__parameters:
+    arrival_tolerance_m: 0.8
+    rtk_fixed_tolerance_m: 0.2
+    rtk_float_tolerance_m: 0.3
+    search_speed_mps: 0.5
+    waypoint_timeout_s: 90
+    exploration_timeout_s: 240
+    max_retry_count: 2
+    stuck_window_s: 8.0
+    stuck_min_progress_m: 0.3

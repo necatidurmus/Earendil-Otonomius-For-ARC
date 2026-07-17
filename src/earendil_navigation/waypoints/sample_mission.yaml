@@ -1,0 +1,23 @@
+# Sample waypoint mission file
+# Load via: ros2 param set /mission_manager waypoints_file /path/to/this.yaml
+
+waypoints:
+  - x: 2.0
+    y: 0.0
+    yaw: 0
+    label: 'forward'
+
+  - x: 2.0
+    y: 2.0
+    yaw: 90
+    label: 'turn_right'
+
+  - x: 0.0
+    y: 2.0
+    yaw: 180
+    label: 'back'
+
+  - x: 0.0
+    y: 0.0
+    yaw: 270
+    label: 'home'

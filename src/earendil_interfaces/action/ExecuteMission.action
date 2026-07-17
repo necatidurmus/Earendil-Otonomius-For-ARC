@@ -1,0 +1,17 @@
+# ExecuteMission — execute a full waypoint mission
+
+earendil_interfaces/Waypoint[] waypoints
+string mission_name
+bool pause_on_failure     # pause instead of cancel on waypoint failure
+---
+earendil_interfaces/Waypoint[] completed_waypoints
+uint32 succeeded_count
+uint32 failed_count
+string final_status
+---
+# Feedback
+uint32 current_waypoint_index
+uint32 total_waypoints
+float32 distance_remaining
+float32 elapsed_time_sec
+string current_status_text
